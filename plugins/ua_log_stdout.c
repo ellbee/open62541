@@ -65,12 +65,12 @@ UA_Log_Stdout_log(void *context, UA_LogLevel level, UA_LogCategory category,
     pthread_mutex_lock(&printf_mutex);
 #endif
 
-    fprintf(&logfile, "[%04u-%02u-%02u %02u:%02u:%02u.%03u (UTC%+05d)] %s/%s" ANSI_COLOR_RESET "\t",
+    fprintf(logfile, "[%04u-%02u-%02u %02u:%02u:%02u.%03u (UTC%+05d)] %s/%s" ANSI_COLOR_RESET "\t",
            dts.year, dts.month, dts.day, dts.hour, dts.min, dts.sec, dts.milliSec,
            (int)(tOffset / UA_DATETIME_SEC / 36), logLevelNames[level], logCategoryNames[category]);
-    vfprintf(msg, args);
-    fprintf("\n");
-    fflush(&logfile);
+    vfprintf(logfile, msg, args);
+    fprintf(logfile, "\n");
+    fflush(logfile);
 
 #if UA_MULTITHREADING >= 100
     pthread_mutex_unlock(&printf_mutex);
