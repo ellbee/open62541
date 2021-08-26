@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 
-#if UA_MULTITHREADING >= 200
+#if UA_MULTITHREADING >= 100
 #include <pthread.h>
 static pthread_mutex_t printf_mutex = PTHREAD_MUTEX_INITIALIZER;
 #endif
@@ -36,6 +36,8 @@ static pthread_mutex_t printf_mutex = PTHREAD_MUTEX_INITIALIZER;
 # define ANSI_COLOR_RESET   ""
 #endif
 
+FILE *logfile;
+
 const char *logLevelNames[6] = {"trace", "debug",
                                 ANSI_COLOR_GREEN "info",
                                 ANSI_COLOR_YELLOW "warn",
@@ -59,18 +61,18 @@ UA_Log_Stdout_log(void *context, UA_LogLevel level, UA_LogCategory category,
     UA_Int64 tOffset = UA_DateTime_localTimeUtcOffset();
     UA_DateTimeStruct dts = UA_DateTime_toStruct(UA_DateTime_now() + tOffset);
 
-#if UA_MULTITHREADING >= 200
+#if UA_MULTITHREADING >= 100
     pthread_mutex_lock(&printf_mutex);
 #endif
 
-    printf("[%04u-%02u-%02u %02u:%02u:%02u.%03u (UTC%+05d)] %s/%s" ANSI_COLOR_RESET "\t",
+    fprintf(&logfile, "[%04u-%02u-%02u %02u:%02u:%02u.%03u (UTC%+05d)] %s/%s" ANSI_COLOR_RESET "\t",
            dts.year, dts.month, dts.day, dts.hour, dts.min, dts.sec, dts.milliSec,
            (int)(tOffset / UA_DATETIME_SEC / 36), logLevelNames[level], logCategoryNames[category]);
-    vprintf(msg, args);
-    printf("\n");
-    fflush(stdout);
+    vfprintf(msg, args);
+    fprintf("\n");
+    fflush(&logfile);
 
-#if UA_MULTITHREADING >= 200
+#if UA_MULTITHREADING >= 100
     pthread_mutex_unlock(&printf_mutex);
 #endif
 }
