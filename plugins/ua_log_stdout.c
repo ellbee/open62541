@@ -46,6 +46,11 @@ const char *logLevelNames[6] = {"trace", "debug",
 const char *logCategoryNames[7] = {"network", "channel", "session", "server",
                                    "client", "userland", "securitypolicy"};
 
+void
+UA_Set_Logfile_location(FILE *location) {
+  logfile = location
+}
+
 #ifdef __clang__
 __attribute__((__format__(__printf__, 4 , 0)))
 #endif
