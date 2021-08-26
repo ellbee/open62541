@@ -22,7 +22,7 @@ UA_Log_Stdout_log(void *_, UA_LogLevel level, UA_LogCategory category,
 UA_EXPORT void
 UA_Log_Stdout_clear(void *logContext);
 
-void 
+extern void 
 UA_Set_Logfile_location(FILE *location);
 /* By default the client and server is configured with UA_Log_Stdout
    This constructs a logger with a configurable max log level */
