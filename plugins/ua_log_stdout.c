@@ -48,7 +48,7 @@ const char *logCategoryNames[7] = {"network", "channel", "session", "server",
 
 void
 UA_Set_Logfile_location(FILE *location) {
-  logfile = location
+  logfile = location;
 }
 
 #ifdef __clang__
